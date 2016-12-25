@@ -16,22 +16,23 @@ shinyUI(fluidPage(
   titlePanel("Word Cloud"),
   
   # Sidebar with a slider input for number of bins 
-  fluidRow(
-      column(9,
-        
+      sidebarLayout(
                 sidebarPanel(
                         selectInput ("book",
                                    "Choose a book:", 
-                                   c("A Mid Summer Night's Dream", "The Merchant of Venice",
-                                   "Romeo and Juliet"), selected = "A Mid Summer Night's Dream" ),
+                                  choices = books ),
                        actionButton ("change", "change"),
-                       h1(""),
+                       hr(),
                        sliderInput("minFreq", "Minimum Frequency:", 1, 50, value = 15, step = 1),
                        sliderInput("MaxWords", "Maximum Number of Words:", 1, 300, value = 100 )
-                )
-      ) #column(9
-    )#fluidRow (
-
-  
+                ),
+     
+      mainPanel(
+             textOutput("text1"),
+             textOutput("text2"),
+             plotOutput("plot1")
+             
+      )#column(3
+)
 ))
 

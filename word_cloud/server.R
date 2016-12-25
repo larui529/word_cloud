@@ -8,19 +8,27 @@
 #
 
 library(shiny)
+library(wordcloud)
 
-# Define server logic required to draw a histogram
-shinyServer(function(input, output) {
-   
-  output$distPlot <- renderPlot({
-    
-    # generate bins based on input$bins from ui.R
-    x    <- faithful[, 2] 
-    bins <- seq(min(x), max(x), length.out = input$bins + 1)
-    
-    # draw the histogram with the specified number of bins
-    hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    
-  })
-  
-})
+function(input, output, session) {
+        freq <- reactive ({
+                input$change
+                isolate({
+                        book <- input$book
+                        DTM <- getDTM (book)
+                        f <- colSums(as.matrix(DTM))
+                        ord = order(-f)
+                        f = f[ord]
+                        f
+                })
+                
+        })
+        
+        output$plot1 <- renderPlot({
+                minfreq <- input$minFreq
+                maxword <- input$MaxWords
+                wordcloud(names(freq()), freq(), max.words = maxword,
+                          min.freq = minfreq, colors = brewer.pal(6, "Dark2") )
+        })
+        
+}
